@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>I'm not a robot</title>
+
+<style>
+html, 
+body {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #E8E8E8;
+  font-family: Consolas, monaco, monospace;
+}
+
+#render-canvas {
+  width: 300px;
+  height: 300px;
+  outline: none;
+}
+
+#center-div {
+  width: 300px;
+  height: 300px;
+  margin: -150px auto;
+  position: relative;
+  top: 50%;
+  text-align: center;
+}
+</style>
+
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+</head>
+<body>
+
+<div id="center-div">
+  <div>Please click all <span style="color: #c94c4c;">RED</span> cubes</div>
+  <canvas id="render-canvas" touch-action="none"></canvas>
+  <div id="label" style="color: #c94c4c;">I am a robot</div>
+</div>
+
+<script>
+
+function isCanvasSupported() {
+  var c = document.createElement('canvas');
+  return !!(c.getContext && c.getContext('2d'));
+}
+
+if (!isCanvasSupported()) {
+  alert("Your browser does not support canvas!");
+}
+
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
+  }
+  return a;
+}
+
+var BOX = "box";
+var RED = "#f7786b";
+var LIGHT_GREEN = "#b5e7a0";
+var GREEN = "#4caf50";
+
+// Cube: 3 x 3 x 3
+var array = [];
+for (var i = 0; i < 27; i++) {
+  array[i] = BOX + (i + 1);
+}
+// Remove center box
+array.splice(13, 1);
+shuffle(array);
+
+var selectedCubes = array.slice(0, 3);
+
+var canvas = document.getElementById("render-canvas");
+var engine = new BABYLON.Engine(canvas, true);
+
+
+
+var createScene = function () {
+
+  var scene = new BABYLON.Scene(engine);
+
+  var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 4, Math.PI / 3, 8, new BABYLON.Vector3(0, 0, 0), scene);
+  camera.attachControl(canvas, true);
+  camera.lowerRadiusLimit = camera.upperRadiusLimit = camera.radius = 8;  
+
+  // Add lights to the scene
+  var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 12, 0), scene);
+  light1.intensity = 0.8;
+
+
+  var matGreen = new BABYLON.StandardMaterial("matGreen", scene);
+  matGreen.alpha = 0.6;
+  matGreen.diffuseColor = new BABYLON.Color3.FromHexString(LIGHT_GREEN);
+
+  var options = {
+    width: 1,
+    height: 1,
+    depth: 1
+  };
+
+  var space = 0.2;
+  var offset = 1 + space;
+  var i = 1;
+  for (var y = 1; y <= 3; y++) {
+    for (var x = 1; x <= 3; x++) {
+      for (var z = 1; z <= 3; z++) {
+        var box = BABYLON.MeshBuilder.CreateBox(BOX + i, options, scene);
+        box.material = matGreen;
+        box.hasVertexAlpha = true;
+        box.position = new BABYLON.Vector3(offset * x - 2 * offset, offset * y - 2 * offset, offset * z - 2 * offset);
+        i++;
+      }
+    }
+  }
+
+  var matRed = new BABYLON.StandardMaterial("matRed", scene);
+  matRed.alpha = 0.8;
+  matRed.diffuseColor = new BABYLON.Color3.FromHexString(RED);
+
+  for (var i= 0; i < selectedCubes.length; i++) {
+    for (var j = 0; j < scene.meshes.length; j++) {
+      if (selectedCubes[i] == scene.meshes[j].name) {
+        scene.meshes[j].material = matRed;
+        break;
+      }
+    }    
+  }
+
+  scene.onPointerDown = function (evt, pickingInfo) {
+    var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+    if (pickResult.pickedMesh) {
+      pickResult.pickedMesh.material = matGreen;
+      for (var i = 0; i < selectedCubes.length; i++) {
+        if (selectedCubes[i] == pickResult.pickedMesh.name) {
+          selectedCubes[i] = -1;
+          break;
+        }
+      }
+
+      var count = 0;
+      for (var i = 0; i < selectedCubes.length; i++) {
+        if (selectedCubes[i] == -1) {
+          count++;
+        }
+      }
+
+      if (count == 3) {
+        document.getElementById("label").innerHTML = "I'm not a robot";
+        document.getElementById("label").style.color = GREEN;
+      }
+    }
+  }
+  
+  return scene;
+};
+
+
+var scene = createScene(); 
+scene.clearColor = new BABYLON.Color3.FromHexString("#E8E8E8");
+
+engine.runRenderLoop(function () {
+  scene.render();
+});
+
+</script>
+
+</body>
+</html>
