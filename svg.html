@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Svg</title>
+<style>
+
+@keyframes line-dash {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
+
+.path {
+  -webkit-animation: line-dash 40s linear infinite;
+  stroke-dasharray: 10, 4;
+}
+
+.circle-path {
+  -webkit-animation: line-dash 60s linear infinite;
+  stroke-dasharray: 1, 10;
+  stroke-linecap: round;
+}
+
+
+.loader-path {
+  stroke-dasharray: 150, 200;
+  stroke-dashoffset: -10;
+  -webkit-animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+          animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+  stroke-linecap: round;
+}
+
+@keyframes rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124;
+  }
+}
+
+
+</style>
+</head>
+<body>
+  
+  <div style="position: relative; width: 300px; height: 300px; border: 1px solid grey;">
+
+    <div style="position: absolute; top: 0px; left: 0px; border: 1px solid blue;">top</div>
+
+    <svg width="50" height="260" style="position: absolute; top: 20px;">
+      <circle id="orange-circle" r="10" cx="10" cy="0" fill="blue" shape-rendering="auto">
+        <animate 
+          attributeName="cy"
+          from="0"
+          to="260" 
+          dur="2s"
+          begin="0s"
+          repeatCount="indefinite"
+          fill="freeze" 
+          id="circ-anim"/>
+      </circle>
+      <line x1="10" y1="0" x2="10" y2="260" style="stroke: rgb(0, 0, 255); stroke-width: 5" />
+      
+      
+    </svg>
+
+    <svg width="50" height="260" style="position: absolute; top: 20px; left: 50px;">
+      <circle cx="10" cy ="10" r="10" fill="blue" stroke-width="1" shape-rendering="auto" />
+      <circle cx="10" cy ="50" r="10" fill="blue" stroke-width="1" shape-rendering="auto" />
+      <circle cx="10" cy ="100" r="10" fill="blue" stroke-width="1" shape-rendering="auto" />
+      <line class="circle-path" x1="10" y1="260" x2="10" y2="10" style="stroke: rgb(0, 0, 255); stroke-width: 5" />      
+    </svg>
+
+    <svg heigh ="100px" width="100px" style="position: absolute; top: 20px; left: 100px;">
+      <circle cx="30" cy ="30" r="20" fill="lime" stroke-width="1" shape-rendering="auto" />
+      <circle cx="30" cy ="30" r="25" fill="white" fill-opacity="0" stroke="#000000" stroke-width="1"  >
+        <animate attributeType="SVG" attributeName="r" begin="0s" dur="1.5s" repeatCount="indefinite" from="20" to="30"/>
+        <animate attributeType="CSS" attributeName="stroke-opacity" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+        <animate attributeType="CSS" attributeName="stroke-width" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+      </circle>
+    </svg>
+
+    <svg heigh ="100px" width="100px" style="position: absolute; top: 80px; left: 100px;">
+      <circle cx="30" cy ="30" r="20" fill="lime" stroke-width="1" shape-rendering="auto" />
+      <circle cx="30" cy ="30" r="25" fill="white" fill-opacity="0" stroke="#000000" stroke-width="1"  >
+        <animate attributeType="SVG" attributeName="r" begin="0s" dur="1.5s" repeatCount="indefinite" from="20" to="30"/>
+        <animate attributeType="CSS" attributeName="stroke-opacity" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+        <animate attributeType="CSS" attributeName="stroke-width" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+      </circle>
+    </svg>
+
+    <svg heigh ="100px" width="10px" style="position: absolute; top: 150px; left: 100px;">
+      <line class="path" x1="10" y1="0" x2="10" y2="100" stroke-width="20" stroke="black"/>
+    </svg>
+
+    <svg heigh ="100px" width="10px" style="position: absolute; top: 150px; left: 130px;">
+      <line class="path" x1="10" y1="100" x2="10" y2="0" stroke-width="20" stroke="black">
+    </svg>
+
+    <svg heigh ="100px" width="100px" style="position: absolute; top: 0px; left: 200px;">
+      <polygon points="0 100,25 50,50 100" style="fill:lime;stroke:purple;stroke-width:1;fill-rule:evenodd;" />
+
+      <polyline points="0 90,25 40,50 90" fill="none" stroke="black" stroke-width="5" >
+        <animate attributeType="SVG" attributeName="points" begin="0s" dur="1.5s" repeatCount="indefinite" from="0 90,25 40,50 90" to="0 70,25 20,50 70"/>
+        <animate attributeType="CSS" attributeName="stroke-opacity" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+      </polyline>
+    </svg>
+
+    <svg heigh ="100px" width="100px" style="position: absolute; top: 100px; left: 200px;">
+      <polyline points="0 100,25 50,50 100" fill="none" stroke="lime" stroke-width="5" >
+      </polyline>
+
+      <polyline points="0 80,25 30,50 80" fill="none" stroke="black" stroke-width="5" >
+        <animate attributeType="SVG" attributeName="points" begin="0s" dur="1.5s" repeatCount="indefinite" from="0 90,25 40,50 90" to="0 70,25 20,50 70"/>
+        <animate attributeType="CSS" attributeName="stroke-opacity" begin="0s"  dur="1.5s" repeatCount="indefinite" from="1" to="0"/>
+      </polyline>
+    </svg>
+
+    <svg heigh ="100px" width="100px" style="position: absolute; top: 200px; left: 200px;">
+      <circle class="loader-path" cx="30" cy="30" r="20" fill="none" stroke="lime" stroke-width="10" />
+    </svg>
+
+    <div style="position: absolute; bottom: 0px; left: 0px; border: 1px solid green;">bottom</div>
+
+  </div>
+</body>
+</html>
